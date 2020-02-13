@@ -4,8 +4,8 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import com.example.demo.model.User;
+import com.example.demo.repositories.DbRepository;
 import com.example.demo.service.UserService;
-import repositories.DbRepository;
 
 @Component
 public class UserServiceImpl implements UserService {

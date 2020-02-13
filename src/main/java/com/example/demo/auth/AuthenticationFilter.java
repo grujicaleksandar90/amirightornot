@@ -9,11 +9,8 @@ import javax.ws.rs.BadRequestException;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 import com.example.demo.exceptions.DemoUnauthorizedException;
-import lombok.extern.slf4j.Slf4j;
-
 
 @Component
-@Slf4j
 public class AuthenticationFilter extends OncePerRequestFilter {
 
   private static final String AUTHORIZATION_HEADER = "Authorization";
@@ -25,14 +22,25 @@ public class AuthenticationFilter extends OncePerRequestFilter {
     if (request.getHeader(AUTHORIZATION_HEADER) != null) {
       try {
         AuthUtil.validateToken(request.getHeader(AUTHORIZATION_HEADER));
-      } catch(BadRequestException e) {
-        throw new DemoUnauthorizedException(e.getMessage());
+      } catch (BadRequestException | DemoUnauthorizedException e) {
+        resolveException(response, e);
       }
     } else {
       if (!request.getRequestURL().toString().contains(AUTH_PATH)) {
-        throw new DemoUnauthorizedException("Authorization header is not present.");
+        AuthUtil.buildHttpServletResponse(response, HttpServletResponse.SC_FORBIDDEN,
+            "Authorization header is not present.");
       }
     }
     filterChain.doFilter(request, response);
+  }
+
+  private void resolveException(HttpServletResponse response, Exception e) throws IOException {
+    if (e.getClass().equals(DemoUnauthorizedException.class)) {
+      AuthUtil.buildHttpServletResponse(response, HttpServletResponse.SC_UNAUTHORIZED,
+          e.getMessage());
+    } else {
+      AuthUtil.buildHttpServletResponse(response, HttpServletResponse.SC_BAD_REQUEST,
+          e.getMessage());
+    }
   }
 }
