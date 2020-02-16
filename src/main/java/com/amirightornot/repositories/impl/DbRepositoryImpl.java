@@ -1,4 +1,4 @@
-package com.example.demo.repositories.impl;
+package com.amirightornot.repositories.impl;
 
 import java.util.ArrayList;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,9 +10,9 @@ import org.springframework.http.MediaType;
 import org.springframework.stereotype.Repository;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
-import com.example.demo.cofig.DatabaseConfig;
-import com.example.demo.model.User;
-import com.example.demo.repositories.DbRepository;
+import com.amirightornot.cofig.DatabaseConfig;
+import com.amirightornot.model.User;
+import com.amirightornot.repositories.DbRepository;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -20,6 +20,8 @@ import lombok.extern.slf4j.Slf4j;
 public class DbRepositoryImpl implements DbRepository {
 
   private static final String HEADER_API_KEY = "x-apiKey";
+  private static final String QUERY_PARAM_NAME = "q";
+  private static final String QUERY_PARAM_VALUE = "{\"username\": \"%s\", \"password\": \"%s\"}";
 
   private RestTemplate restClient;
   private DatabaseConfig dbConfig;
@@ -31,13 +33,26 @@ public class DbRepositoryImpl implements DbRepository {
   }
 
   @Override
-  public ArrayList<User> getAllUsers() {
+  public ArrayList<User> getUser(User user) {
+    String queryPath = String.format(QUERY_PARAM_VALUE, user.getUsername(), user.getPassword());
     HttpEntity<String> entity = new HttpEntity<>(buildHeaders());
-    UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(dbConfig.getUsersEndpoint());
-    log.debug("Sending GET request to restdb url: {}", builder.toUriString());
-    ArrayList<User> users = restClient.exchange(builder.build(false).toUriString(), HttpMethod.GET,
+    UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(dbConfig.getUsersEndpoint())
+        .queryParam(QUERY_PARAM_NAME, queryPath);
+    ArrayList<User> users = restClient.exchange(builder.build().encode().toUri(), HttpMethod.GET,
         entity, new ParameterizedTypeReference<ArrayList<User>>() {}).getBody();
     return users;
+  }
+
+  @Override
+  public User createUser(User user) {
+    user.setId("1234"); // This should be UUID.randomUUID()
+    HttpEntity<User> entity = new HttpEntity<User>(user, buildHeaders());
+    UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(dbConfig.getUsersEndpoint());
+    log.debug("Sending POST request to restdb url: {}", builder.toUriString());
+    User createdUser =
+        restClient.exchange(builder.build(false).toUriString(), HttpMethod.POST, entity, User.class)
+            .getBody();
+    return createdUser;
   }
 
   private HttpHeaders buildHeaders() {

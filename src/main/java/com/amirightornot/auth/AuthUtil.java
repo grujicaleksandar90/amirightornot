@@ -1,13 +1,11 @@
-package com.example.demo.auth;
+package com.amirightornot.auth;
 
 import java.io.IOException;
-import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.BadRequestException;
-import com.example.demo.exceptions.DemoUnauthorizedException;
-import com.example.demo.model.User;
+import com.amirightornot.exceptions.DemoUnauthorizedException;
+import com.amirightornot.model.User;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.JwtException;
 
@@ -15,14 +13,6 @@ public class AuthUtil {
 
   private static final String TOKEN_PREFIX = "Bearer ";
   private static final String ISSUER = "demo.inc";
-
-  public static void validateUserCredentials(User user, List<User> dbUsers) {
-    Optional<User> dbUser = dbUsers.stream().filter(u -> u.getUsername().equals(user.getUsername())
-        && u.getPassword().equals(user.getPassword())).findFirst();
-    if (!dbUser.isPresent()) {
-      throw new BadRequestException("Invalid credentials!");
-    }
-  }
 
   public static void validateToken(String token) {
     if (!token.startsWith(TOKEN_PREFIX)) {
@@ -41,10 +31,10 @@ public class AuthUtil {
   public static String createToken(User user) {
     return TokenHelper.createJWT(UUID.randomUUID().toString(), ISSUER, user.getUsername());
   }
-  
-  public static void buildHttpServletResponse(HttpServletResponse response, int status, String message) throws IOException {
+
+  public static void buildHttpServletResponse(HttpServletResponse response, int status,
+      String message) throws IOException {
     response.setStatus(status);
     response.sendError(status, message);
   }
-  
 }

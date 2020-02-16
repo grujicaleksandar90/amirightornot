@@ -1,35 +1,35 @@
-package com.example.demo.exceptions;
+package com.amirightornot.exceptions;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
-@ResponseStatus(HttpStatus.BAD_REQUEST)
-public class DemoBadRequestException extends RuntimeException {
+@ResponseStatus(HttpStatus.UNAUTHORIZED)
+public class DemoUnauthorizedException extends RuntimeException {
   private static final long serialVersionUID = 960175545919446319L;
   
   private final int httpStatusCode;
   private final int statusCode = 401;
 
-  public DemoBadRequestException() {
+  public DemoUnauthorizedException() {
       this.httpStatusCode = statusCode;
   }
   
-  public DemoBadRequestException(String message) {
+  public DemoUnauthorizedException(String message) {
       super(message);
       this.httpStatusCode = statusCode;
   }
 
-  public DemoBadRequestException(String message, Throwable cause) {
+  public DemoUnauthorizedException(String message, Throwable cause) {
       super(message, cause);
       this.httpStatusCode = statusCode;
   }
 
-  public DemoBadRequestException(Throwable cause) {
+  public DemoUnauthorizedException(Throwable cause) {
       super(cause);
       this.httpStatusCode = statusCode;
   }
 
-  public DemoBadRequestException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
+  public DemoUnauthorizedException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
       super(message, cause, enableSuppression, writableStackTrace);
       this.httpStatusCode = statusCode;
   }

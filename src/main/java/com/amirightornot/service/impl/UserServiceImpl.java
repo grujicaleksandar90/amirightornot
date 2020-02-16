@@ -1,11 +1,11 @@
-package com.example.demo.service.impl;
+package com.amirightornot.service.impl;
 
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import com.example.demo.model.User;
-import com.example.demo.repositories.DbRepository;
-import com.example.demo.service.UserService;
+import com.amirightornot.model.User;
+import com.amirightornot.repositories.DbRepository;
+import com.amirightornot.service.UserService;
 
 @Component
 public class UserServiceImpl implements UserService {
@@ -17,8 +17,11 @@ public class UserServiceImpl implements UserService {
     this.dbRepository = dbRepository;
   }
 
-  @Override
-  public List<User> getUsers() {
-    return dbRepository.getAllUsers();
+  public List<User> getUser(User user) {
+    return dbRepository.getUser(user);
+  }
+
+  public User createUser(User user) {
+    return dbRepository.createUser(user);
   }
 }

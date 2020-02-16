@@ -1,4 +1,4 @@
-package com.example.demo.auth;
+package com.amirightornot.auth;
 
 import java.io.IOException;
 import javax.servlet.FilterChain;
@@ -8,13 +8,14 @@ import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.BadRequestException;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
-import com.example.demo.exceptions.DemoUnauthorizedException;
+import com.amirightornot.exceptions.DemoUnauthorizedException;
 
 @Component
 public class AuthenticationFilter extends OncePerRequestFilter {
 
   private static final String AUTHORIZATION_HEADER = "Authorization";
-  private static final String AUTH_PATH = "authorization";
+  private static final String LOGIN_PATH = "login";
+  private static final String REGISTER_PATH = "register";
 
   @Override
   protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
@@ -24,11 +25,14 @@ public class AuthenticationFilter extends OncePerRequestFilter {
         AuthUtil.validateToken(request.getHeader(AUTHORIZATION_HEADER));
       } catch (BadRequestException | DemoUnauthorizedException e) {
         resolveException(response, e);
+        return;
       }
     } else {
-      if (!request.getRequestURL().toString().contains(AUTH_PATH)) {
+      if (!request.getRequestURL().toString().contains(LOGIN_PATH)
+          && !request.getRequestURL().toString().contains(REGISTER_PATH)) {
         AuthUtil.buildHttpServletResponse(response, HttpServletResponse.SC_FORBIDDEN,
             "Authorization header is not present.");
+        return;
       }
     }
     filterChain.doFilter(request, response);

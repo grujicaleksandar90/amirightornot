@@ -1,4 +1,4 @@
-package com.example.demo.cofig;
+package com.amirightornot.cofig;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

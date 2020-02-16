@@ -1,4 +1,4 @@
-package com.example.demo.auth;
+package com.amirightornot.auth;
 
 import javax.crypto.spec.SecretKeySpec;
 import javax.xml.bind.DatatypeConverter;
