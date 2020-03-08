@@ -9,8 +9,10 @@ import java.security.Key;
 import java.util.Date;
 
 public class TokenHelper {
+  
+  private TokenHelper() {}
 
-  public static String createJWT(String id, String issuer, String subject) {
+  public static String createJWT(String issuer, String subject) {
     SignatureAlgorithm signatureAlgorithm = SignatureAlgorithm.HS256;
     long nowMillis = System.currentTimeMillis();
     Date now = new Date(nowMillis);

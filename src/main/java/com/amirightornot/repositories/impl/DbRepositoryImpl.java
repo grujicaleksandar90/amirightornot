@@ -38,21 +38,19 @@ public class DbRepositoryImpl implements DbRepository {
     HttpEntity<String> entity = new HttpEntity<>(buildHeaders());
     UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(dbConfig.getUsersEndpoint())
         .queryParam(QUERY_PARAM_NAME, queryPath);
-    ArrayList<User> users = restClient.exchange(builder.build().encode().toUri(), HttpMethod.GET,
-        entity, new ParameterizedTypeReference<ArrayList<User>>() {}).getBody();
-    return users;
+    return restClient.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity,
+        new ParameterizedTypeReference<ArrayList<User>>() {}).getBody();
   }
 
   @Override
   public User createUser(User user) {
     user.setId("1234"); // This should be UUID.randomUUID()
-    HttpEntity<User> entity = new HttpEntity<User>(user, buildHeaders());
+    HttpEntity<User> entity = new HttpEntity<>(user, buildHeaders());
     UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(dbConfig.getUsersEndpoint());
     log.debug("Sending POST request to restdb url: {}", builder.toUriString());
-    User createdUser =
-        restClient.exchange(builder.build(false).toUriString(), HttpMethod.POST, entity, User.class)
-            .getBody();
-    return createdUser;
+    return restClient
+        .exchange(builder.build(false).toUriString(), HttpMethod.POST, entity, User.class)
+        .getBody();
   }
 
   private HttpHeaders buildHeaders() {

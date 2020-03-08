@@ -5,6 +5,8 @@ import com.amirightornot.model.User;
 
 public class Util {
 
+  private Util() {}
+  
   public static void validateUser(User user) {
     String missingField = null;
 

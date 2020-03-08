@@ -17,7 +17,7 @@ import com.amirightornot.utils.Util;
 @RestController
 public class UserController {
 
-  private final static String ACCESS_TOKEN = "access_token";
+  private static final  String ACCESS_TOKEN = "access_token";
 
   @Autowired
   private UserService userService;
@@ -44,10 +44,15 @@ public class UserController {
   @PostMapping(value = "/register", produces = "application/json")
   public User register(@RequestBody User user) {
     try {
-      Util.validateUser(user);
+      doValidation(user);
       return userService.createUser(user);
     } catch (BadRequestException e) {
       throw new DemoBadRequestException(e.getMessage());
     }
+  }
+
+  private void doValidation(User user) {
+    Util.validateUser(user);
+    userService.validateUsername(user);
   }
 }

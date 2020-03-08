@@ -1,6 +1,7 @@
 package com.amirightornot.service.impl;
 
 import java.util.List;
+import javax.ws.rs.BadRequestException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import com.amirightornot.model.User;
@@ -23,5 +24,11 @@ public class UserServiceImpl implements UserService {
 
   public User createUser(User user) {
     return dbRepository.createUser(user);
+  }
+
+  public void validateUsername(User user) {
+    if (!dbRepository.getUser(user).isEmpty()) {
+      throw new BadRequestException("Username already exists!");
+    }
   }
 }

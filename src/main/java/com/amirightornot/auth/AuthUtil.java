@@ -1,7 +1,6 @@
 package com.amirightornot.auth;
 
 import java.io.IOException;
-import java.util.UUID;
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.BadRequestException;
 import com.amirightornot.exceptions.DemoUnauthorizedException;
@@ -10,6 +9,8 @@ import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.JwtException;
 
 public class AuthUtil {
+
+  private AuthUtil() {}
 
   private static final String TOKEN_PREFIX = "Bearer ";
   private static final String ISSUER = "demo.inc";
@@ -20,16 +21,16 @@ public class AuthUtil {
     } else {
       try {
         TokenHelper.parseJWT(token.substring(7));
+      } catch (ExpiredJwtException exe) {
+        throw new DemoUnauthorizedException("Authorization token must start with Bearer.");
       } catch (JwtException e) {
-        throw new DemoUnauthorizedException(
-            e instanceof ExpiredJwtException ? "Authorization token has expired."
-                : "Authorization token is invalid");
+        throw new DemoUnauthorizedException("Authorization token is invalid");
       }
     }
   }
 
   public static String createToken(User user) {
-    return TokenHelper.createJWT(UUID.randomUUID().toString(), ISSUER, user.getUsername());
+    return TokenHelper.createJWT(ISSUER, user.getUsername());
   }
 
   public static void buildHttpServletResponse(HttpServletResponse response, int status,

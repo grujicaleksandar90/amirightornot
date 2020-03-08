@@ -39,12 +39,9 @@ public class AuthenticationFilter extends OncePerRequestFilter {
   }
 
   private void resolveException(HttpServletResponse response, Exception e) throws IOException {
-    if (e.getClass().equals(DemoUnauthorizedException.class)) {
-      AuthUtil.buildHttpServletResponse(response, HttpServletResponse.SC_UNAUTHORIZED,
-          e.getMessage());
-    } else {
-      AuthUtil.buildHttpServletResponse(response, HttpServletResponse.SC_BAD_REQUEST,
-          e.getMessage());
-    }
+    AuthUtil.buildHttpServletResponse(response,
+        e.getClass().equals(DemoUnauthorizedException.class) ? HttpServletResponse.SC_UNAUTHORIZED
+            : HttpServletResponse.SC_BAD_REQUEST,
+        e.getMessage());
   }
 }
