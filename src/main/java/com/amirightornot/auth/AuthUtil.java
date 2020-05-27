@@ -22,7 +22,7 @@ public class AuthUtil {
       try {
         TokenHelper.parseJWT(token.substring(7));
       } catch (ExpiredJwtException exe) {
-        throw new DemoUnauthorizedException("Authorization token must start with Bearer.");
+        throw new DemoUnauthorizedException("Authorization token is expired.");
       } catch (JwtException e) {
         throw new DemoUnauthorizedException("Authorization token is invalid");
       }
