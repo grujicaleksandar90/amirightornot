@@ -2,6 +2,7 @@ package com.amirightornot.auth;
 
 import javax.crypto.spec.SecretKeySpec;
 import javax.xml.bind.DatatypeConverter;
+import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtBuilder;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -31,5 +32,10 @@ public class TokenHelper {
   private static Key getSigningKey(SignatureAlgorithm signatureAlgorithm) {
     byte[] apiKeySecretBytes = DatatypeConverter.parseBase64Binary("123apiKey");
     return new SecretKeySpec(apiKeySecretBytes, signatureAlgorithm.getJcaName());
+  }
+
+  public static String getUsernameFromToken(String token) {
+    return (String) Jwts.parser().setSigningKey(getSigningKey(SignatureAlgorithm.HS256))
+        .parseClaimsJws(token).getBody().get("sub");
   }
 }

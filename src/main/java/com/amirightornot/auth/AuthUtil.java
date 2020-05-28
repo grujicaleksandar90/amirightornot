@@ -3,7 +3,7 @@ package com.amirightornot.auth;
 import java.io.IOException;
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.BadRequestException;
-import com.amirightornot.exceptions.DemoUnauthorizedException;
+import com.amirightornot.exceptions.AironUnauthorizedException;
 import com.amirightornot.model.User;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.JwtException;
@@ -22,9 +22,9 @@ public class AuthUtil {
       try {
         TokenHelper.parseJWT(token.substring(7));
       } catch (ExpiredJwtException exe) {
-        throw new DemoUnauthorizedException("Authorization token is expired.");
+        throw new AironUnauthorizedException("Authorization token has expired.");
       } catch (JwtException e) {
-        throw new DemoUnauthorizedException("Authorization token is invalid");
+        throw new AironUnauthorizedException("Authorization token is invalid");
       }
     }
   }

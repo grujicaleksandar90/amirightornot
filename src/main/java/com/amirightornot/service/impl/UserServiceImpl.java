@@ -3,12 +3,12 @@ package com.amirightornot.service.impl;
 import java.util.List;
 import javax.ws.rs.BadRequestException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 import com.amirightornot.model.User;
 import com.amirightornot.repositories.DbRepository;
 import com.amirightornot.service.UserService;
 
-@Component
+@Service
 public class UserServiceImpl implements UserService {
 
   private final DbRepository dbRepository;

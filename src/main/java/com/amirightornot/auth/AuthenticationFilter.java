@@ -8,7 +8,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.BadRequestException;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
-import com.amirightornot.exceptions.DemoUnauthorizedException;
+import com.amirightornot.exceptions.AironUnauthorizedException;
 
 @Component
 public class AuthenticationFilter extends OncePerRequestFilter {
@@ -23,7 +23,7 @@ public class AuthenticationFilter extends OncePerRequestFilter {
     if (request.getHeader(AUTHORIZATION_HEADER) != null) {
       try {
         AuthUtil.validateToken(request.getHeader(AUTHORIZATION_HEADER));
-      } catch (BadRequestException | DemoUnauthorizedException e) {
+      } catch (BadRequestException | AironUnauthorizedException e) {
         resolveException(response, e);
         return;
       }
@@ -40,7 +40,7 @@ public class AuthenticationFilter extends OncePerRequestFilter {
 
   private void resolveException(HttpServletResponse response, Exception e) throws IOException {
     AuthUtil.buildHttpServletResponse(response,
-        e.getClass().equals(DemoUnauthorizedException.class) ? HttpServletResponse.SC_UNAUTHORIZED
+        e.getClass().equals(AironUnauthorizedException.class) ? HttpServletResponse.SC_UNAUTHORIZED
             : HttpServletResponse.SC_BAD_REQUEST,
         e.getMessage());
   }
