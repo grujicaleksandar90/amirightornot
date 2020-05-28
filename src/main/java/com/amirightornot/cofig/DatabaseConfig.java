@@ -14,4 +14,6 @@ public class DatabaseConfig {
   private String apiKey;
 
   private String usersEndpoint;
+  
+  private String postsEndpoint;
 }

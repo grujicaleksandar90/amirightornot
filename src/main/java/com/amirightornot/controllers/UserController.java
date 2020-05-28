@@ -8,8 +8,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import com.amirightornot.auth.AuthUtil;
-import com.amirightornot.exceptions.DemoBadRequestException;
-import com.amirightornot.exceptions.DemoUnauthorizedException;
+import com.amirightornot.exceptions.AironBadRequestException;
 import com.amirightornot.model.User;
 import com.amirightornot.service.UserService;
 import com.amirightornot.utils.Util;
@@ -17,7 +16,7 @@ import com.amirightornot.utils.Util;
 @RestController
 public class UserController {
 
-  private static final  String ACCESS_TOKEN = "access_token";
+  private static final String ACCESS_TOKEN = "access_token";
 
   @Autowired
   private UserService userService;
@@ -29,15 +28,11 @@ public class UserController {
 
   @PostMapping(value = "/login", produces = "application/json")
   public String login(@RequestBody User user) {
-    try {
-      if ((user.getUsername() != null && user.getPassword() != null)
-          && !userService.getUser(user).isEmpty()) {
-        return new JSONObject().put(ACCESS_TOKEN, AuthUtil.createToken(user)).toString();
-      } else {
-        throw new DemoUnauthorizedException("Credentails are missing!");
-      }
-    } catch (BadRequestException e) {
-      throw new DemoBadRequestException(e.getMessage());
+    if ((user.getUsername() != null && user.getPassword() != null)
+        && !userService.getUser(user).isEmpty()) {
+      return new JSONObject().put(ACCESS_TOKEN, AuthUtil.createToken(user)).toString();
+    } else {
+      throw new AironBadRequestException("Invalid credentials.");
     }
   }
 
@@ -47,7 +42,7 @@ public class UserController {
       doValidation(user);
       return userService.createUser(user);
     } catch (BadRequestException e) {
-      throw new DemoBadRequestException(e.getMessage());
+      throw new AironBadRequestException(e.getMessage());
     }
   }
 
